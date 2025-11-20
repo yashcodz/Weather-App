@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6dd5fa, #2980b9);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            width: 350px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #666;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #2980b9;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .weather-box {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .temp {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🌤 Weather App</h2>
+
+    <input type="text" id="cityInput" placeholder="Enter city (e.g., Pune)">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div class="weather-box" id="weatherBox"></div>
+</div>
+
+<script>
+    function getWeather() {
+        let city = document.getElementById("cityInput").value;
+
+        if (city === "") {
+            alert("Please enter a city name");
+            return;
+        }
+
+        let url = `https://wttr.in/${city}?format=j1`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                let area = data.nearest_area[0].areaName[0].value;
+                let temp = data.current_condition[0].temp_C;
+                let condition = data.current_condition[0].weatherDesc[0].value;
+                let humidity = data.current_condition[0].humidity;
+                let wind = data.current_condition[0].windspeedKmph;
+
+                document.getElementById("weatherBox").innerHTML = `
+                    <div class="temp">${temp}°C</div>
+                    <p><b>City:</b> ${area}</p>
+                    <p><b>Condition:</b> ${condition}</p>
+                    <p><b>Humidity:</b> ${humidity}%</p>
+                    <p><b>Wind Speed:</b> ${wind} km/h</p>
+                `;
+            })
+            .catch(() => {
+                alert("City not found!");
+            });
+    }
+</script>
+
+</body>
+</html>
